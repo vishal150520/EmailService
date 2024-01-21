@@ -2,6 +2,13 @@ using EmailApplication.Models;
 using EmailApplication.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder.WithOrigins("http://localhost:4200")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
 var configuration = builder.Configuration;
 // Add services to the container.
 var emailconfig=configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
@@ -20,7 +27,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowSpecificOrigin");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
